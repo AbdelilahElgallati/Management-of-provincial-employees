@@ -5,15 +5,22 @@ if (!isset($_SESSION["user"]))
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulaire de modification</title>
-  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <title>Modifier un employé - Gestion des Employés</title>
+  <link rel="stylesheet" type="text/css" href="./css/modern-variables.css">
+  <link rel="stylesheet" type="text/css" href="./css/modern-dashboard.css">
+  <link rel="stylesheet" type="text/css" href="./css/modern-forms.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <?php
+$page_title = "Modifier un employé";
+$show_search = false;
+include "./header.php";
+
 include "./tools.php";
 if (isset($_POST["id"])) {
   $id = $_POST["id"];
@@ -21,6 +28,7 @@ if (isset($_POST["id"])) {
 } else {
   echo "champs manquant";
 }
+
 if (isset($_POST['modifier'])) {
   $nom = $_POST['nom'];
   $prenom = $_POST['prenom'];
@@ -36,111 +44,232 @@ if (isset($_POST['modifier'])) {
   $aal = $_POST['aff_aal'];
   modifier($id, $nom, $prenom, $cin, $date_nais, $date_aff, $budget, $ppr, $grade, $echelle, $div, $aal);
   header("location:page_principale.php");
-} // Fin du test isset
+}
+
+$budgets = getbudget();
+$grades = getgrade();
+$echelles = getechelle();
+$divisions = getdivision();
+$aals = getaal();
 ?>
 
 <body>
-  <div class="form-container">
-    <header class="header">
-      <nav>
-        <ul>
-          <li><a href="page_principale.php"> Acceuil </a></li>
-        </ul>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i class="fas fa-building"></i>
+          <span>Province Admin</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="./page_principale.php" class="nav-item">
+          <i class="fas fa-tachometer-alt"></i>
+          Tableau de bord
+        </a>
+        <a href="ajoute.php" class="nav-item">
+          <i class="fas fa-user-plus"></i>
+          Ajouter employé
+        </a>
+        <a href="./page_principale.php?logout=1" class="nav-item">
+          <i class="fas fa-sign-out-alt"></i>
+          Se déconnecter
+        </a>
       </nav>
-    </header>
-    <div class="form-wrapper">
-      <form action="" method="POST" class="form">
-        <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
-        <h2>Formulaire de modification</h2>
-        <div class="form-section">
-          <label for="nom">Nom</label>
-          <input class="input" type="text" name="nom" value="<?php echo $res["nom"]; ?>" id="nom" />
-          <label for="prenom">Prenom</label>
-          <input class="input" type="text" name="prenom" value="<?php echo $res["prenom"]; ?>" id="prenom" />
-          <label for="CIN">CIN</label>
-          <input class="input" type="text" name="cin" value="<?php echo $res["cin"]; ?>" id="CIN" />
-          <label for="date_naissance">date de naissance</label>
-          <input class="input" type="date" name="date_nais" value="<?php echo $res["date_nais"]; ?>" id="date_naissance" />
-          <label for="date_aff">date d'affectation</label>
-          <input class="input" type="date" name="date_aff" value="<?php echo $res["date_aff"]; ?>" id="date_aff" />
-          <label for="budget">budget</label>
-          <select class="input" id="budget" type="text" name="budget" />
-          <?php
-          $bd = getbudget();
-          foreach ($bd as $b) {
-            if ($b['nom_bdg'] == $res['budget']) {
-              echo '<option value="' . $b['nom_bdg'] . '" selected>' . $b['nom_bdg'] . '</option>';
-            } else {
-              echo '<option value="' . $b['nom_bdg'] . '">' . $b['nom_bdg'] . '</option>';
-            }
-          }
-          ?>
-          </select>
-        </div>
-        <div class="form-section">
-          <label for="PPR">PPR</label>
-          <input class="input" value="<?php echo $res["ppr"]; ?>" type="number" name="ppr" id="PPR" />
-          <label for="grade">Grade</label>
-          <select class="input" id="grade" type="text" name="grade" />
-          <?php
-          $gr = getgrade();
-          foreach ($gr as $g) {
-            if ($g['nom_grd'] == $res['grade']) {
-              echo '<option value="' . $g['nom_grd'] . '" selected>' . $g['nom_grd'] . '</option>';
-            } else {
-              echo '<option value="' . $g['nom_grd'] . '">' . $g['nom_grd'] . '</option>';
-            }
-          }
-          ?>
-          </select>
-          <label for="echelle">Echelle</label>
-          <select class="input" id="echelle" type="text" name="echelle" />
-          <?php
-          $echel = getechelle();
-          foreach ($echel as $ech) {
-            if ($ech['nom_ech'] == $res['echelle']) {
-              echo '<option value="' . $ech['nom_ech'] . '" selected>' . $ech['nom_ech'] . '</option>';
-            } else {
-              echo '<option value="' . $ech['nom_ech'] . '">' . $ech['nom_ech'] . '</option>';
-            }
-          }
-          ?>
-          </select>
-          <label for="division">Division</label>
-          <select class="input" id="aff_div" type="text" name="aff_div" />
-          <option value="null"></option>
-          <?php
-          $div = getdivision();
-          foreach ($div as $d) {
-            if ($d['nom_div'] == $res['aff_div']) {
-              echo '<option value="' . $d['nom_div'] . '" selected>' . $d['nom_div'] . '</option>';
-            } else {
-              echo '<option value="' . $d['nom_div'] . '">' . $d['nom_div'] . '</option>';
-            }
-          }
-          ?>
-          </select>
-          <label for="AAL">AAL</label>
-          <select class="input" id="aal" type="text" name="aff_aal" />
-          <option value="null"></option>
-          <?php
-          $aal = getaal();
-          foreach ($aal as $al) {
-            if ($al['nom_aal'] == $res['aff_aal']) {
-              echo '<option value="' . $al['nom_aal'] . '" selected>' . $al['nom_aal'] . '</option>';
-            } else {
-              echo '<option value="' . $al['nom_aal'] . '">' . $al['nom_aal'] . '</option>';
-            }
-          }
-          ?>
-          </select>
-        </div>
-        <div class="button">
-          <input type="submit" name="modifier" value="modifier" />
-        </div>
-      </form>
-    </div>
-  </div>
-</body>
+    </aside>
 
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="page-title">
+          <h1>Modifier un employé</h1>
+        </div>
+        
+        <div class="top-nav-actions">
+          <a href="./page_principale.php" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+          </a>
+        </div>
+      </header>
+
+      <!-- Form Content -->
+      <div class="dashboard-content">
+        <div class="form-container">
+          <div class="form-card">
+            <div class="form-header">
+              <h1><i class="fas fa-edit"></i> Modifier l'employé</h1>
+              <p>Modifiez les informations de l'employé</p>
+            </div>
+            
+            <form action="" method="POST" class="form-body">
+              <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
+              
+              <!-- Personal Information -->
+              <div class="form-section">
+                <h3><i class="fas fa-user"></i> Informations personnelles</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" id="nom" name="nom" class="form-input" value="<?php echo htmlspecialchars($res["nom"]); ?>" />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="prenom" class="form-label">Prénom</label>
+                    <input type="text" id="prenom" name="prenom" class="form-input" value="<?php echo htmlspecialchars($res["prenom"]); ?>" />
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="cin" class="form-label">CIN</label>
+                    <input type="text" id="cin" name="cin" class="form-input" value="<?php echo htmlspecialchars($res["cin"]); ?>" />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="date_nais" class="form-label">Date de naissance</label>
+                    <input type="date" id="date_nais" name="date_nais" class="form-input" value="<?php echo $res["date_nais"]; ?>" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Employment Information -->
+              <div class="form-section">
+                <h3><i class="fas fa-briefcase"></i> Informations d'emploi</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="date_aff" class="form-label">Date d'affectation</label>
+                    <input type="date" id="date_aff" name="date_aff" class="form-input" value="<?php echo $res["date_aff"]; ?>" />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="ppr" class="form-label">PPR</label>
+                    <input type="number" id="ppr" name="ppr" class="form-input" value="<?php echo $res["ppr"]; ?>" />
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="budget" class="form-label">Budget</label>
+                    <select id="budget" name="budget" class="form-select">
+                      <?php foreach ($budgets as $budget): ?>
+                        <option value="<?php echo htmlspecialchars($budget['nom_bdg']); ?>" 
+                                <?php echo ($budget['nom_bdg'] == $res['budget']) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($budget['nom_bdg']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="grade" class="form-label">Grade</label>
+                    <select id="grade" name="grade" class="form-select">
+                      <?php foreach ($grades as $grade): ?>
+                        <option value="<?php echo htmlspecialchars($grade['nom_grd']); ?>" 
+                                <?php echo ($grade['nom_grd'] == $res['grade']) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($grade['nom_grd']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="echelle" class="form-label">Échelle</label>
+                    <select id="echelle" name="echelle" class="form-select">
+                      <?php foreach ($echelles as $echelle): ?>
+                        <option value="<?php echo htmlspecialchars($echelle['nom_ech']); ?>" 
+                                <?php echo ($echelle['nom_ech'] == $res['echelle']) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($echelle['nom_ech']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Assignment Information -->
+              <div class="form-section">
+                <h3><i class="fas fa-sitemap"></i> Affectation</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="aff_div" class="form-label">Division</label>
+                    <select id="aff_div" name="aff_div" class="form-select">
+                      <option value="null">Aucune division</option>
+                      <?php foreach ($divisions as $division): ?>
+                        <option value="<?php echo htmlspecialchars($division['nom_div']); ?>" 
+                                <?php echo ($division['nom_div'] == $res['aff_div']) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($division['nom_div']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="aff_aal" class="form-label">AAL</label>
+                    <select id="aff_aal" name="aff_aal" class="form-select">
+                      <option value="null">Aucun AAL</option>
+                      <?php foreach ($aals as $aal): ?>
+                        <option value="<?php echo htmlspecialchars($aal['nom_aal']); ?>" 
+                                <?php echo ($aal['nom_aal'] == $res['aff_aal']) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($aal['nom_aal']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div class="form-actions">
+                <a href="./page_principale.php" class="btn btn-outline">
+                  <i class="fas fa-times"></i>
+                  Annuler
+                </a>
+                <button type="submit" name="modifier" class="btn btn-primary">
+                  <i class="fas fa-save"></i>
+                  Enregistrer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Form validation and enhancement
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const inputs = form.querySelectorAll('input, select');
+      
+      // Add visual feedback for required fields
+      inputs.forEach(input => {
+        if (input.hasAttribute('required')) {
+          input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+              this.classList.add('error');
+            } else {
+              this.classList.remove('error');
+            }
+          });
+        }
+      });
+      
+      // Form submission with loading state
+      form.addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Modification...';
+        submitBtn.disabled = true;
+      });
+    });
+  </script>
+</body>
 </html>

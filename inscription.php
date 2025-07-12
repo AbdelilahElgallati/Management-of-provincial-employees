@@ -15,31 +15,70 @@ if (isset($_POST["email"]) && isset($_POST["mot_passe"])) {
 ?>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title> Formulaire d'inscription </title>
-  <link rel="stylesheet" type="text/css" href="./css/inscription.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription - Gestion des Employés Provinciaux</title>
+  <link rel="stylesheet" type="text/css" href="./css/modern-variables.css">
+  <link rel="stylesheet" type="text/css" href="./css/modern-login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-  <form method="POST" action="">
-    <h2> formulaire d'inscription </h2>
-    <table align="center">
-      <tr>
-        <td align="left">Email<span class="star">*</span></td>
-        <td><input type="email" name="email" placeholder="votre email " required></td>
-      </tr>
-      <tr>
-        <td align="left">Password<span class="star">*</span></td>
-        <td><input type="password" name="mot_passe" placeholder=" votre mot de passe" required></td>
-      </tr>
-      <tr>
-        <td colspan="2"><input class="button" type="submit" name="inscription" value="inscription"></td>
-      </tr>
-    </table>
-  </form>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h1 class="login-title">Créer un compte</h1>
+        <p class="login-subtitle">Rejoignez le système de gestion provincial</p>
+      </div>
+      
+      <form method="POST" action="" class="login-form">
+        <div class="form-group">
+          <label for="email" class="form-label required">Adresse email</label>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input 
+              type="email" 
+              id="email"
+              name="email" 
+              class="form-input input-with-icon" 
+              placeholder="votre@email.com" 
+              required
+            >
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label required">Mot de passe</label>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input 
+              type="password" 
+              id="password"
+              name="mot_passe" 
+              class="form-input input-with-icon" 
+              placeholder="Votre mot de passe" 
+              required
+            >
+          </div>
+        </div>
+        
+        <button type="submit" name="inscription" class="login-btn">
+          <i class="fas fa-user-plus"></i>
+          S'inscrire
+        </button>
+      </form>
+      
+      <div class="login-footer">
+        <p>Déjà un compte ? 
+          <a href="login.php" class="login-link">Se connecter</a>
+        </p>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

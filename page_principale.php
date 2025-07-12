@@ -1,109 +1,161 @@
 <?php
-session_start();
-include "./tools.php";
-if (!isset($_SESSION["user"]))
-  header("location: ./index.php");
+$page_title = "Liste des employés";
+$show_search = true;
+include "./header.php";
 ?>
-<!DOCTYPE html>
-<html>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="./css/principale.css">
-  <title> Gestion des employés </title>
-</head>
-
-<body>
-  <header class="header">
-    <nav>
-      <ul>
-        <div class="container">
-          <div class="det">
-            <li><a href="./page_principale.php?logout=1"> Se déconnecter </a></li>
-            <li><a href="ajoute.php"> Ajouter </a></li>
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value"><?php echo count(getdata()); ?></div>
+                <div class="stat-label">Total Employés</div>
+              </div>
+              <div class="stat-icon primary">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> +12% ce mois
+            </div>
           </div>
-          <?php
-          if (isset($_GET['logout'])) {
-            unset($_SESSION["user"]);
-            header("location:./index.php");
-          }
-          ?>
-          <div class="search">
-            <li><input type="text" placeholder="type" class="type" name="type" /></li>
-            <li><input type="text" placeholder="value" class="valeur" name="keywords" /></li>
-            <li><button class="recherche">rechercher</button></li>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">Divisions</div>
+              </div>
+              <div class="stat-icon secondary">
+                <i class="fas fa-sitemap"></i>
+              </div>
+            </div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> +1 cette année
+            </div>
           </div>
-
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value">25</div>
+                <div class="stat-label">AAL</div>
+              </div>
+              <div class="stat-icon success">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+            </div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> +3 cette année
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value">98%</div>
+                <div class="stat-label">Taux de présence</div>
+              </div>
+              <div class="stat-icon warning">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+            </div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i> +2% ce mois
+            </div>
+          </div>
         </div>
-      </ul>
-    </nav>
-  </header>
-  <h1> Liste des employés</h1>
-  <table>
-    <thead>
-      <tr>
-        <th> nom </th>
-        <th> prenom </th>
-        <th> cin </th>
-        <th> date de naissance </th>
-        <th> date d'affectation </th>
-        <th> budget </th>
-        <th> ppr </th>
-        <th> grade </th>
-        <th> echelle </th>
-        <th> division </th>
-        <th> aal </th>
-        <th colspan="2">Action</th>
-      </tr>
-    </thead>
-    <tbody class="tbd">
-      <?php
-      $data = getdata();
-      foreach ($data as $res) {
-      ?>
-        <tr>
-          <td><?php echo $res["nom"] ?></td>
-          <td><?php echo $res["prenom"] ?></td>
-          <td><?php echo $res["cin"] ?></td>
-          <td><?php echo $res["date_nais"] ?></td>
-          <td><?php echo $res["date_aff"] ?></td>
-          <td><?php echo $res["budget"] ?></td>
-          <td><?php echo $res["ppr"] ?></td>
-          <td><?php echo $res["grade"] ?></td>
-          <td><?php echo $res["echelle"] ?></td>
-          <td><?php echo $res["aff_div"] ?></td>
-          <td><?php echo $res["aff_aal"] ?></td>
-          <td>
-            <form action="detail.php" method="POST">
-              <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
-              <input type="submit" value="Détail" />
-            </form>
-            <form action="modifier.php" method="POST">
-              <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
-              <input type="submit" value="Modifier" />
-            </form>
-          </td>
-          <td>
-            <form action="./supprimer.php" method="POST">
-              <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
-              <input type="submit" name="suprimer" value="Supprimer" />
-            </form>
-            <form action="./imprimer.php" method="POST">
-              <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
-              <input type="submit" target="_blank" name="imprimer" value="Imprimer" />
-            </form>
-          </td>
-        </tr>
-      <?php } ?>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="13">Liste des employés</td>
-      </tr>
-    </tfoot>
-  </table>
-  <script src="./js/principale.js"></script>
-</body>
 
-</html>
+        <!-- Employee Data Table -->
+        <div class="data-section">
+          <div class="data-header">
+            <div class="data-title">
+              <i class="fas fa-list"></i>
+              Liste des employés
+            </div>
+            <div class="data-actions">
+              <a href="ajoute.php" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i>
+                Ajouter
+              </a>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>CIN</th>
+                  <th>Date de naissance</th>
+                  <th>Date d'affectation</th>
+                  <th>Budget</th>
+                  <th>PPR</th>
+                  <th>Grade</th>
+                  <th>Échelle</th>
+                  <th>Division</th>
+                  <th>AAL</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody class="tbd">
+                <?php
+                $data = getdata();
+                foreach ($data as $res) {
+                ?>
+                  <tr>
+                    <td><strong><?php echo htmlspecialchars($res["nom"]); ?></strong></td>
+                    <td><?php echo htmlspecialchars($res["prenom"]); ?></td>
+                    <td><code><?php echo htmlspecialchars($res["cin"]); ?></code></td>
+                    <td><?php echo date('d/m/Y', strtotime($res["date_nais"])); ?></td>
+                    <td><?php echo date('d/m/Y', strtotime($res["date_aff"])); ?></td>
+                    <td>
+                      <span class="status-badge status-active"><?php echo htmlspecialchars($res["budget"]); ?></span>
+                    </td>
+                    <td><?php echo $res["ppr"] ? htmlspecialchars($res["ppr"]) : '-'; ?></td>
+                    <td><?php echo htmlspecialchars($res["grade"]); ?></td>
+                    <td><?php echo htmlspecialchars($res["echelle"]); ?></td>
+                    <td><?php echo $res["aff_div"] ? htmlspecialchars($res["aff_div"]) : '-'; ?></td>
+                    <td><?php echo $res["aff_aal"] ? htmlspecialchars($res["aff_aal"]) : '-'; ?></td>
+                    <td>
+                      <div class="action-buttons">
+                        <form action="detail.php" method="POST" style="display: inline;">
+                          <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
+                          <button type="submit" class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                        </form>
+                        
+                        <form action="modifier.php" method="POST" style="display: inline;">
+                          <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
+                          <button type="submit" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                        </form>
+                        
+                        <form action="./supprimer.php" method="POST" style="display: inline;">
+                          <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
+                          <button type="submit" name="suprimer" class="btn btn-danger btn-sm" 
+                                  onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                        
+                        <form action="./imprimer.php" method="POST" style="display: inline;">
+                          <input type="hidden" name="id" value="<?php echo $res["id"]; ?>" />
+                          <button type="submit" name="imprimer" class="btn btn-outline btn-sm">
+                            <i class="fas fa-print"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+<?php include "./footer.php"; ?> 
